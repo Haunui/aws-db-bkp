@@ -22,8 +22,15 @@ if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
   ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE" > $filename
 else
+  echo "tables = $TABLES"
+  echo "$TABLES" | tr ',' '\n'
   while IFS= read -r TABLE; do 
-    filename="$tmp_bkp_path/${CURRENT_DATE}_table_${TABLE}.sql"
+    if [ -z "$TABLE" ]; then
+      continue
+    fi
+
+    filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
+    echo "$filename backed up"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" > $filename
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
