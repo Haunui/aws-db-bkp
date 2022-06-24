@@ -10,16 +10,12 @@ fi
 
 BKP_SSH_LOGIN="bkp@192.168.0.9"
 
-echo "debug 1"
 if ! ssh -vvv -o StrictHostKeyChecking=no $BKP_SSH_LOGIN 'cat /volume1/aws-bkp/instance_ip; exit' < /dev/null > instance_ip; then
   echo "No instance found"
   exit 1
 fi
 
-echo "debug 2"
-
 IP=$(cat instance_ip)
-echo $IP
 
 SSH_OPTS="-o StrictHostKeyChecking=no"
 SSH_LOGIN="ubuntu@$IP"
@@ -27,8 +23,6 @@ SSH_LOGIN="ubuntu@$IP"
 tmp_bkp_path="bkp"
 
 mkdir -p "$tmp_bkp_path"
-
-echo "debug 3"
 
 CURRENT_DATE=$(date +%Y-%m-%d_%H-%M)
 if [ -z "$TABLES" ]; then
@@ -38,17 +32,14 @@ if [ -z "$TABLES" ]; then
 else
   while IFS= read -r TABLE; do 
     if [ -z "$TABLE" ]; then
-      break
+      continue
     fi
-
-    echo "inner debug $TABLE"
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" < /dev/null > $filename
     echo "$filename backed up"
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
-echo "debug 4"
 
 echo "Send files to backup server"
 rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:/volume1/aws-bkp/
