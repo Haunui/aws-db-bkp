@@ -54,8 +54,8 @@ else
       head -n -2 current_table.sql > current_table.sql
       head -n -2 last_bkp_found.sql > last_bkp_found.sql
 
-      $c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
-      $l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
+      c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
+      l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
 
       rm -f current_table.sql
       rm -f last_bkp_found.sql
