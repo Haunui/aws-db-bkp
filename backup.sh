@@ -8,13 +8,14 @@ if [ -z "$DATABASE" ]; then
   exit 1
 fi
 
+BKP_SSH_LOGIN="bkp@192.168.0.9"
+
 rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/instance_ip instance_ip
 
 IP=$(cat instance_ip)
 
 SSH_OPTS="-o StrictHostKeyChecking=no"
 SSH_LOGIN="ubuntu@$IP"
-BKP_SSH_LOGIN="bkp@192.168.0.9"
 
 tmp_bkp_path="bkp"
 
