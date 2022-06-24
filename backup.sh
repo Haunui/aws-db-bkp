@@ -49,7 +49,7 @@ else
       echo "Table '$TABLE' backup found"
       rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
 
-      cat current_table.sql
+      cat $filename
       echo "______________________________"
       cat last_bkp_found.sql
 
