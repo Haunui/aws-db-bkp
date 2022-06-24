@@ -37,7 +37,7 @@ if [ -z "$TABLES" ]; then
 else
   while IFS= read -r TABLE; do 
     if [ -z "$TABLE" ]; then
-      continue
+      break
     fi
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
