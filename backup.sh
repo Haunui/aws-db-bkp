@@ -46,6 +46,7 @@ else
     last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t /volume1/aws-bkp | grep table_$TABLE" | head -n1)
 
     if ! [ -z "$last_bkp_found" ]; then
+      echo "Table '$TABLE' backup found"
       rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
 
       cp $filename current_table.sql
@@ -61,7 +62,10 @@ else
 
       if [[ $c_sum == $l_sum ]]; then
         rm -f $filename
-        echo "$filename found in backup folder. Backup cancelled."
+        echo "Table '$TABLE' backup in backup folder is up to date"
+        echo "Nothing to do for this table"
+      else
+        echo "Table '$TABLE' backup in backup folder is outdated"
       fi
     fi
 
