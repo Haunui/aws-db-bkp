@@ -36,7 +36,7 @@ else
     fi
 
     if [ -z "$(ssh $SSH_OPTS $SSH_LOGIN "sudo mysql -e \"use $DATABASE; show tables\"" | grep $TABLE)" ]; then
-      echo "Table '$TABLE' not found in database"
+      echo "Table '$TABLE' not found in database '$DATABASE'"
       exit 1
     fi
 
