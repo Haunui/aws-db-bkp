@@ -37,7 +37,7 @@ else
 
     if [ -z "$(ssh $SSH_OPTS $SSH_LOGIN "sudo mysql -e \"use $DATABASE; show tables\"" | grep $TABLE)" ]; then
       echo "Table '$TABLE' not found in database"
-      continue
+      exit 1
     fi
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
