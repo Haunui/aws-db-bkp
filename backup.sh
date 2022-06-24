@@ -54,7 +54,7 @@ else
       head -n -1 current_table.sql > current_table.sql
       head -n -1 last_bkp_found.sql > last_bkp_found.sql
 
-      cat current_table.Sql
+      cat current_table.sql
       echo "______________________________"
       cat last_bkp_found.sql
 
