@@ -40,6 +40,8 @@ else
       break
     fi
 
+    echo "inner debug $TABLE"
+
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" < /dev/null > $filename
     echo "$filename backed up"
