@@ -27,6 +27,8 @@ tmp_bkp_path="bkp"
 
 mkdir -p "$tmp_bkp_path"
 
+echo "debug 3"
+
 CURRENT_DATE=$(date +%Y-%m-%d_%H-%M)
 if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
@@ -43,6 +45,7 @@ else
     echo "$filename backed up"
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
+echo "debug 4"
 
 echo "Send files to backup server"
 rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:/volume1/aws-bkp/
