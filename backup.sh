@@ -22,8 +22,6 @@ if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
   ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE" > $filename
 else
-  echo "tables = $TABLES"
-  echo "$TABLES" | tr ',' '\n'
   while IFS= read -r TABLE; do 
     if [ -z "$TABLE" ]; then
       continue
