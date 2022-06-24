@@ -1,13 +1,16 @@
 #!/usr/bin/bash
 
-IP=$1
 DATABASE=$2
 TABLES=$3
 
-if [ -z "$IP" ] || [ -z "$DATABASE" ]; then
-  echo "Usage: $0 <ip> <database> [table1,table2...]"
+if [ -z "$DATABASE" ]; then
+  echo "Usage: $0 <database> [table1,table2...]"
   exit 1
 fi
+
+rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/instance_ip instance_ip
+
+IP=$(cat instance_ip)
 
 SSH_OPTS="-o StrictHostKeyChecking=no"
 SSH_LOGIN="ubuntu@$IP"
