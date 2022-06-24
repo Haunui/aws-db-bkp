@@ -24,6 +24,11 @@ tmp_bkp_path="bkp"
 
 mkdir -p "$tmp_bkp_path"
 
+if [ -z "$(ssh $SSH_OPTS $SSH_LOGIN "sudo mysql -e \"show databases\"" | grep $DATABASE)" ]; then
+  echo "Database '$DATABASE' not found"
+  exit 1
+fi
+
 CURRENT_DATE=$(date +%Y-%m-%d_%H-%M)
 if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
