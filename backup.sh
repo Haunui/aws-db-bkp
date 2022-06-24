@@ -49,19 +49,11 @@ else
       echo "Table '$TABLE' backup found"
       rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
 
-      cat $filename
-      echo "______________________________"
-      cat last_bkp_found.sql
-
       cp $filename dated_current_table.sql
       mv last_bkp_found.sql dated_last_bkp_found.sql
 
       head -n -1 dated_current_table.sql > current_table.sql
       head -n -1 dated_last_bkp_found.sql > last_bkp_found.sql
-
-      cat current_table.sql
-      echo "______________________________"
-      cat last_bkp_found.sql
 
       c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
       l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
@@ -69,7 +61,7 @@ else
       rm -f current_table.sql
       rm -f last_bkp_found.sql
 
-      echo "$c_sum == $l_sum"
+      echo "[[ $c_sum == $l_sum ]]"
 
       if [[ $c_sum == $l_sum ]]; then
         rm -f $filename
