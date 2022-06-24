@@ -10,7 +10,10 @@ fi
 
 BKP_SSH_LOGIN="bkp@192.168.0.9"
 
-rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/instance_ip instance_ip
+if ! rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/instance_ip instance_ip 2> /dev/null; then
+  echo "No instance found"
+  exit 1
+fi
 
 IP=$(cat instance_ip)
 
