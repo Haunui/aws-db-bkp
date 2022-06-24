@@ -53,10 +53,11 @@ else
       echo "______________________________"
       cat last_bkp_found.sql
 
-      cp $filename current_table.sql
+      cp $filename dated_current_table.sql
+      mv last_bkp_found.sql dated_last_bkp_found.sql
 
-      head -n -1 current_table.sql > current_table.sql
-      head -n -1 last_bkp_found.sql > last_bkp_found.sql
+      head -n -1 dated_current_table.sql > current_table.sql
+      head -n -1 dated_last_bkp_found.sql > last_bkp_found.sql
 
       cat current_table.sql
       echo "______________________________"
