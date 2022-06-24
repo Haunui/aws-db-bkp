@@ -10,7 +10,7 @@ fi
 
 BKP_SSH_LOGIN="bkp@192.168.0.9"
 
-if ! ssh -vvv -o StrictHostKeyChecking=no $BKP_SSH_LOGIN 'cat /volume1/aws-bkp/instance_ip; exit' < /dev/null > instance_ip; then
+if ! ssh -o StrictHostKeyChecking=no $BKP_SSH_LOGIN 'cat /volume1/aws-bkp/instance_ip; exit' < /dev/null > instance_ip; then
   echo "No instance found"
   exit 1
 fi
