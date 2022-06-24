@@ -29,5 +29,5 @@ else
 fi
 
 
-rsync -az "$tmp_bkp_path/*" $BKP_SSH_LOGIN:/volume1/aws-bkp/
+rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/*" $BKP_SSH_LOGIN:/volume1/aws-bkp/
 rm -rf "$tmp_bkp_path" &> /dev/null
