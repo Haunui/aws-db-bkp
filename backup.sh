@@ -60,6 +60,8 @@ else
       rm -f current_table.sql
       rm -f last_bkp_found.sql
 
+      echo "$c_sum == $l_sum"
+
       if [[ $c_sum == $l_sum ]]; then
         rm -f $filename
         echo "Table '$TABLE' backup in backup folder is up to date"
