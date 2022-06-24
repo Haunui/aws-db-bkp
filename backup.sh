@@ -51,8 +51,12 @@ else
 
       cp $filename current_table.sql
 
-      head -n -2 current_table.sql > current_table.sql
-      head -n -2 last_bkp_found.sql > last_bkp_found.sql
+      head -n -1 current_table.sql > current_table.sql
+      head -n -1 last_bkp_found.sql > last_bkp_found.sql
+
+      cat current_table.Sql
+      echo "______________________________"
+      cat last_bkp_found.sql
 
       c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
       l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
