@@ -25,6 +25,7 @@ CURRENT_DATE=$(date +%Y-%m-%d_%H-%M)
 if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
   ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE" > $filename
+  echo "$filename backed up"
 else
   while IFS= read -r TABLE; do 
     if [ -z "$TABLE" ]; then
@@ -32,8 +33,8 @@ else
     fi
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
-    echo "$filename backed up"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" < /dev/null > $filename
+    echo "$filename backed up"
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
 
