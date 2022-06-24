@@ -29,7 +29,7 @@ else
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
     echo "$filename backed up"
-    #ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" > $filename
+    ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" > $filename
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
 
