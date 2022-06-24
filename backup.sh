@@ -19,6 +19,7 @@ fi
 echo "debug 2"
 
 IP=$(cat instance_ip)
+echo $IP
 
 SSH_OPTS="-o StrictHostKeyChecking=no"
 SSH_LOGIN="ubuntu@$IP"
