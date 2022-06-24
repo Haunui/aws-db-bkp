@@ -41,7 +41,7 @@ else
     fi
 
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
-    ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" < /dev/null > $filename
+    ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" > $filename
 
     last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t /volume1/aws-bkp | grep table_$TABLE" | head -n1)
 
