@@ -35,8 +35,36 @@ else
       continue
     fi
 
+    if [ -z "$(ssh $SSH_OPTS $SSH_LOGIN "sudo mysql -e \"use $DATABASE; show tables\"" | grep $TABLE)" ]; then
+      echo "Table '$TABLE' not found in database"
+      continue
+    fi
+
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" < /dev/null > $filename
+
+    last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t /volume1/aws-bkp | grep table_$TABLE" | head -n1)
+
+    if ! [ -z "$last_bkp_found" ]; then
+      rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
+
+      cp $filename current_table.sql
+
+      head -n -2 current_table.sql > current_table.sql
+      head -n -2 last_bkp_found.sql > last_bkp_found.sql
+
+      $c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
+      $l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
+
+      rm -f current_table.sql
+      rm -f last_bkp_found.sql
+
+      if [[ $c_sum == $l_sum ]]; then
+        rm -f $filename
+        echo "$filename found in backup folder. Backup cancelled."
+      fi
+    fi
+
     echo "$filename backed up"
   done < <(echo "$TABLES" | tr ',' '\n')
 fi
