@@ -3,15 +3,10 @@
 DATABASE=$2
 TABLES=$3
 
-echo "$bkp_server_ip"
-exit 0
-
 if [ -z "$DATABASE" ]; then
   echo "Usage: $0 <database> [table1,table2...]"
   exit 1
 fi
-
-BKP_SSH_LOGIN="bkp@192.168.0.9"
 
 if ! ssh -o StrictHostKeyChecking=no $BKP_SSH_LOGIN 'cat /volume1/aws-bkp/instance_ip; exit' < /dev/null > instance_ip; then
   echo "No instance found"
