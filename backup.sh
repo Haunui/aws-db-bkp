@@ -8,7 +8,7 @@ if [ -z "$DATABASE" ]; then
   exit 1
 fi
 
-if ! ssh -o StrictHostKeyChecking=no $BKP_SSH_LOGIN 'cat /volume1/aws-bkp/instance_ip; exit' < /dev/null > instance_ip; then
+if ! ssh -o StrictHostKeyChecking=no $BKP_SSH_LOGIN "cat $BKP_PATH/instance_ip; exit" < /dev/null > instance_ip; then
   echo "No instance found"
   exit 1
 fi
@@ -46,7 +46,7 @@ else
     filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}_table_${TABLE}.sql"
     ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE $TABLE" > $filename
 
-    last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t /volume1/aws-bkp | grep table_$TABLE" | head -n1)
+    last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t $BKP_PATH | grep table_$TABLE" | head -n1)
 
     if ! [ -z "$last_bkp_found" ]; then
       echo "Table '$TABLE' backup found"
@@ -80,5 +80,5 @@ else
 fi
 
 echo "Send files to backup server"
-rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:/volume1/aws-bkp/
+rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:$BKP_PATH
 rm -rf "$tmp_bkp_path" &> /dev/null
