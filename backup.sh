@@ -37,7 +37,7 @@ if [ -z "$TABLES" ]; then
 
   if ! [ -z "$last_bkp_found" ]; then
     echo "Database '$DATABASE' backup found"
-    rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:/$BKP_PATH/$last_bkp_found last_bkp_found.sql
+    rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:$BKP_PATH/$last_bkp_found last_bkp_found.sql
 
     cp $filename dated_current_table.sql
     mv last_bkp_found.sql dated_last_bkp_found.sql
