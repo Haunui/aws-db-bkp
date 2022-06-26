@@ -3,6 +3,9 @@
 DATABASE=$2
 TABLES=$3
 
+echo "$bkp_server_ip"
+exit 0
+
 if [ -z "$DATABASE" ]; then
   echo "Usage: $0 <database> [table1,table2...]"
   exit 1
