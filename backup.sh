@@ -16,7 +16,7 @@ fi
 IP=$(cat instance_ip)
 
 SSH_OPTS="-o StrictHostKeyChecking=no"
-SSH_LOGIN="ubuntu@$IP"
+SSH_LOGIN="$SSH_USER@$IP"
 
 tmp_bkp_path="bkp"
 
