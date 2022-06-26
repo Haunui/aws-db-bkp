@@ -3,19 +3,20 @@
 DATABASE=$2
 TABLES=$3
 
+SSH_OPTS="-o StrictHostKeyChecking=no"
+
 if [ -z "$DATABASE" ]; then
   echo "Usage: $0 <database> [table1,table2...]"
   exit 1
 fi
 
-if ! ssh -o StrictHostKeyChecking=no $BKP_SSH_LOGIN "cat $BKP_PATH/instance_ip; exit" < /dev/null > instance_ip; then
+if ! ssh $SSH_OPTS $BKP_SSH_LOGIN "cat $BKP_PATH/instance_ip; exit" < /dev/null > instance_ip; then
   echo "No instance found"
   exit 1
 fi
 
 IP=$(cat instance_ip)
 
-SSH_OPTS="-o StrictHostKeyChecking=no"
 SSH_LOGIN="$SSH_USER@$IP"
 
 tmp_bkp_path="bkp"
@@ -50,7 +51,7 @@ else
 
     if ! [ -z "$last_bkp_found" ]; then
       echo "Table '$TABLE' backup found"
-      rsync -e "ssh -o StrictHostKeyChecking=no" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
+      rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
 
       cp $filename dated_current_table.sql
       mv last_bkp_found.sql dated_last_bkp_found.sql
@@ -80,5 +81,5 @@ else
 fi
 
 echo "Send files to backup server"
-rsync -e "ssh -o StrictHostKeyChecking=no" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:$BKP_PATH
+rsync -e "ssh $SSH_OPTS" -az "$tmp_bkp_path/" $BKP_SSH_LOGIN:$BKP_PATH
 rm -rf "$tmp_bkp_path" &> /dev/null
