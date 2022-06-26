@@ -32,6 +32,36 @@ CURRENT_DATE=$(date +%Y-%m-%d_%H-%M)
 if [ -z "$TABLES" ]; then
   filename="$tmp_bkp_path/${CURRENT_DATE}_db_${DATABASE}.sql"
   ssh $SSH_OPTS $SSH_LOGIN "sudo mysqldump $DATABASE" > $filename
+
+  last_bkp_found=$(ssh $BKP_SSH_LOGIN "ls -t $BKP_PATH | grep db_$DATABASE" | head -n1)
+
+  if ! [ -z "$last_bkp_found" ]; then
+    echo "Database '$DATABASE' backup found"
+    rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:/$BKP_PATH/$last_bkp_found last_bkp_found.sql
+
+    cp $filename dated_current_table.sql
+    mv last_bkp_found.sql dated_last_bkp_found.sql
+
+    head -n -1 dated_current_table.sql > current_table.sql
+    head -n -1 dated_last_bkp_found.sql > last_bkp_found.sql
+
+    c_sum=$(cat current_table.sql | md5sum | cut -d' ' -f1)
+    l_sum=$(cat last_bkp_found.sql | md5sum | cut -d' ' -f1)
+
+    rm -f current_table.sql
+    rm -f last_bkp_found.sql
+
+    echo "[[ $c_sum == $l_sum ]]"
+
+    if [[ $c_sum == $l_sum ]]; then
+      rm -f $filename
+      echo "Database '$DATABASE' backup in backup folder is up to date"
+      echo "Nothing to do for this database"
+    else
+      echo "Database '$DATABASE' backup in backup folder is outdated"
+    fi
+  fi
+
   echo "$filename backed up"
 else
   while IFS= read -r TABLE; do 
@@ -51,7 +81,7 @@ else
 
     if ! [ -z "$last_bkp_found" ]; then
       echo "Table '$TABLE' backup found"
-      rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:/volume1/aws-bkp/$last_bkp_found last_bkp_found.sql
+      rsync -e "ssh $SSH_OPTS" -az $BKP_SSH_LOGIN:$BKP_PATH/$last_bkp_found last_bkp_found.sql
 
       cp $filename dated_current_table.sql
       mv last_bkp_found.sql dated_last_bkp_found.sql
