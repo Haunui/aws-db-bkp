@@ -10,7 +10,7 @@ if [ -z "$DATABASE" ]; then
   exit 1
 fi
 
-if ! ssh $SSH_OPTS $BKP_SSH_LOGIN "cat $BKP_PATH/instance_ip; exit" < /dev/null > instance_ip; then
+if ! ssh $SSH_OPTS $BKP_SSH_LOGIN "cat $BKP_PATH/instance_ip" < /dev/null > instance_ip; then
   echo "No instance found"
   exit 1
 fi
